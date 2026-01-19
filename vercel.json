@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://your-backend.up.railway.app/api/:path*"
+      "destination": "https://slota-production.up.railway.app//api/:path*"
     },
     {
       "source": "/(.*)",
@@ -13,3 +13,4 @@
   "outputDirectory": ".",
   "framework": null
 }
+
