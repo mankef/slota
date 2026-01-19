@@ -1,4 +1,9 @@
-"scripts": {
-  "start": "node server.js",
-  "dev": "nodemon server.js"
+{
+  "name": "purple-fortune-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Static deployment'",
+    "start": "echo 'Ready'"
+  }
 }
