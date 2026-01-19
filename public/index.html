@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Purple Fortune - TG Slots</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        /* Критический CSS встроен для мгновенного рендеринга */
+        :root {
+            --primary-purple: #8A2BE2;
+            --dark-purple: #4B0082;
+            --light-purple: #9370DB;
+            --accent-purple: #DA70D6;
+            --neon-purple: #BF40BF;
+            --gradient-primary: linear-gradient(135deg, #8A2BE2 0%, #4B0082 100%);
+            --gradient-secondary: linear-gradient(135deg, #9370DB 0%, #8A2BE2 100%);
+            --gradient-accent: linear-gradient(135deg, #DA70D6 0%, #BF40BF 100%);
+            --gradient-gold: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            --shadow-purple: 0 10px 30px rgba(138, 43, 226, 0.3);
+            --shadow-dark: 0 5px 15px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 20px rgba(218, 112, 214, 0.7);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        body {
+            background: var(--gradient-primary);
+            color: #fff;
+            min-height: 100vh;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            position: relative;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(191, 64, 191, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(147, 112, 219, 0.1) 0%, transparent 50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 12px;
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-top: 8px;
+        }
+        
+        .logo {
+            font-size: 36px;
+            margin-bottom: 8px;
+            text-shadow: 0 0 15px var(--accent-purple);
+            animation: glow 2s ease-in-out infinite alternate;
+            display: inline-block;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 4px;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        
+        .tagline {
+            font-size: 12px;
+            opacity: 0.9;
+            color: #E6E6FA;
+            letter-spacing: 0.5px;
+        }
+        
+        .stats-card {
+            background: rgba(75, 0, 130, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid var(--light-purple);
+            box-shadow: var(--shadow-purple);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite linear;
+        }
+        
+        .balance-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .balance-label {
+            font-size: 14px;
+            color: #D8BFD8;
+            font-weight: 500;
+        }
+        
+        .balance-amount {
+            font-size: 32px;
+            font-weight: 800;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        .currency {
+            font-size: 20px;
+            color: #FFD700;
+        }
+        
+        .game-area {
+            background: rgba(75, 0, 130, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid var(--light-purple);
+            box-shadow: var(--shadow-purple);
+        }
+        
+        .bet-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+        }
+        
+        .bet-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--gradient-secondary);
+            border: 2px solid var(--accent-purple);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
+            user-select: none;
+        }
+        
+        .bet-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .bet-btn:hover {
+            box-shadow: var(--shadow-glow);
+        }
+        
+        .bet-amount-display {
+            text-align: center;
+            min-width: 100px;
+        }
+        
+        .bet-label {
+            font-size: 12px;
+            color: #D8BFD8;
+            margin-bottom: 2px;
+            font-weight: 500;
+        }
+        
+        .bet-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .slots-machine {
+            position: relative;
+            margin: 20px 0;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            border: 2px solid var(--light-purple);
+        }
+        
+        .slots-reel {
+            display: flex;
+            justify-content: space-around;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .slot {
+            flex: 1;
+            aspect-ratio: 1;
+            max-width: 90px;
+            background: linear-gradient(145deg, #9b4dff, #6a0dad);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 
+                inset 0 0 20px rgba(0, 0, 0, 0.5),
+                0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--accent-purple);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .slot.spinning::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: slotSpin 0.1s infinite linear;
+            border-radius: 10px;
+        }
+        
+        .spin-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--gradient-accent);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 16px;
+            box-shadow: var(--shadow-dark);
+            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
+            user-select: none;
+        }
+        
+        .spin-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .spin-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .spin-btn:hover::before {
+            left: 100%;
+        }
+        
+        .spin-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .result-display {
+            text-align: center;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            line-height: 1.2;
+        }
+        
+        .win {
+            background: linear-gradient(135deg, rgba(0, 255, 0, 0.1), rgba(0, 255, 0, 0.2));
+            color: #00FF00;
+            border: 1px solid #00FF00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .lose {
+            background: linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(255, 0, 0, 0.2));
+            color: #FF4444;
+            border: 1px solid #FF4444;
+        }
+        
+        .actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .action-btn {
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: var(--shadow-dark);
+            touch-action: manipulation;
+            user-select: none;
+        }
+        
+        .action-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .deposit-btn {
+            background: var(--gradient-secondary);
+            color: white;
+        }
+        
+        .withdraw-btn {
+            background: var(--gradient-accent);
+            color: white;
+        }
+        
+        .history-btn {
+            background: rgba(147, 112, 219, 0.8);
+            color: white;
+            grid-column: span 2;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #4B0082, #8A2BE2);
+            padding: 24px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 420px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid var(--accent-purple);
+            box-shadow: var(--shadow-glow);
+            animation: slideUp 0.4s ease;
+            position: relative;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+        
+        .input-group {
+            margin-bottom: 16px;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 6px;
+            color: #E6E6FA;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .amount-input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 2px solid var(--light-purple);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .amount-input:focus {
+            outline: none;
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 15px rgba(218, 112, 214, 0.5);
+        }
+        
+        .payment-info {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+            display: none;
+        }
+        
+        .qr-container {
+            text-align: center;
+            margin: 16px 0;
+        }
+        
+        .qr-code {
+            width: 180px;
+            height: 180px;
+            background: white;
+            padding: 8px;
+            border-radius: 12px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .crypto-address {
+            word-break: break-all;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #FFD700;
+            border: 1px solid var(--light-purple);
+            user-select: all;
+        }
+        
+        .status-display {
+            text-align: center;
+            padding: 12px;
+            margin: 16px 0;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .status-pending {
+            background: rgba(255, 215, 0, 0.1);
+            color: #FFD700;
+            border: 1px solid #FFD700;
+        }
+        
+        .status-success {
+            background: rgba(0, 255, 0, 0.1);
+            color: #00FF00;
+            border: 1px solid #00FF00;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .status-error {
+            background: rgba(255, 0, 0, 0.1);
+            color: #FF4444;
+            border: 1px solid #FF4444;
+        }
+        
+        .loader {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid var(--accent-purple);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            animation: spin 1s linear infinite;
+            margin: 16px auto;
+        }
+        
+        .check-display {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+            border: 1px solid var(--accent-purple);
+        }
+        
+        .check-code {
+            font-size: 24px;
+            font-weight: 800;
+            color: #FFD700;
+            text-align: center;
+            margin: 12px 0;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            user-select: all;
+        }
+        
+        .check-instructions {
+            font-size: 12px;
+            color: #D8BFD8;
+            margin-top: 12px;
+            line-height: 1.5;
+        }
+        
+        .check-instructions a {
+            color: #FFD700;
+            text-decoration: none;
+        }
+        
+        .check-instructions code {
+            background: rgba(0,0,0,0.5);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #FFD700;
+            user-select: all;
+        }
+        
+        .history-table {
+            max-height: 280px;
+            overflow-y: auto;
+            margin: 16px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .history-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid var(--accent-purple);
+            transition: transform 0.2s ease;
+        }
+        
+        .history-item:active {
+            transform: scale(0.98);
+        }
+        
+        .history-type.deposit { border-left-color: #00FF00; }
+        .history-type.withdraw { border-left-color: #FF4444; }
+        .history-type.win { border-left-color: #FFD700; }
+        .history-type.bet { border-left-color: #9370DB; }
+        
+        .footer-info {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 11px;
+            color: #D8BFD8;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+        
+        /* Анимации */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes slotSpin {
+            0% { transform: translateY(0); opacity: 0.3; }
+            100% { transform: translateY(-100%); opacity: 0.3; }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 10px var(--accent-purple); }
+            to { text-shadow: 0 0 20px var(--neon-purple), 0 0 30px var(--neon-purple); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes shine {
+            0% { transform: rotate(45deg) translateX(-100%); }
+            100% { transform: rotate(45deg) translateX(100%); }
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; transform: translateX(100%); }
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 380px) {
+            .container {
+                padding: 8px;
+            }
+            
+            .slot {
+                max-width: 70px;
+            }
+            
+            .balance-amount {
+                font-size: 28px;
+            }
+            
+            .bet-value {
+                font-size: 20px;
+            }
+        }
+        
+        /* Улучшения для iOS */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                min-height: -webkit-fill-available;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">🎰</div>
+            <h1>PURPLE FORTUNE</h1>
+            <div class="tagline">Telegram Mini App • Мгновенные выплаты</div>
+        </div>
+        
+        <!-- Balance Card -->
+        <div class="stats-card">
+            <div class="balance-display">
+                <div class="balance-label">ВАШ БАЛАНС</div>
+                <div class="balance-amount">
+                    <span class="currency">$</span><span id="balance">1000.00</span>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 13px; color: #D8BFD8;">
+                <div>Игр: <span id="gamesToday">0</span></div>
+                <div>Выигрыш: <span id="todayWin" style="color: #00FF00;">$0.00</span></div>
+            </div>
+        </div>
+        
+        <!-- Game Area -->
+        <div class="game-area">
+            <!-- Bet Controls -->
+            <div class="bet-controls">
+                <button class="bet-btn" onclick="changeBet(-100)" aria-label="Уменьшить ставку">−</button>
+                <div class="bet-amount-display">
+                    <div class="bet-label">СТАВКА</div>
+                    <div class="bet-value">$<span id="betAmount">100</span></div>
+                </div>
+                <button class="bet-btn" onclick="changeBet(100)" aria-label="Увеличить ставку">+</button>
+            </div>
+            
+            <!-- Slots Machine -->
+            <div class="slots-machine">
+                <div class="slots-reel">
+                    <div class="slot" id="slot1">🍒</div>
+                    <div class="slot" id="slot2">🍒</div>
+                    <div class="slot" id="slot3">🍒</div>
+                </div>
+                
+                <!-- Result Display -->
+                <div class="result-display" id="resultDisplay"></div>
+                
+                <!-- Spin Button -->
+                <button class="spin-btn" onclick="spin()" id="spinBtn">
+                    <span id="spinText">🎰 КРУТИТЬ 🎰</span>
+                    <div class="loader" id="spinLoader" style="display: none;"></div>
+                </button>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="actions-grid">
+                <button class="action-btn deposit-btn" onclick="showDepositModal()" aria-label="Пополнить баланс">
+                    <span>💎</span> ПОПОЛНИТЬ
+                </button>
+                <button class="action-btn withdraw-btn" onclick="showWithdrawModal()" aria-label="Вывести средства">
+                    <span>💰</span> ВЫВЕСТИ
+                </button>
+                <button class="action-btn history-btn" onclick="showHistoryModal()" aria-label="История операций">
+                    <span>📊</span> ИСТОРИЯ
+                </button>
+            </div>
+        </div>
+        
+        <!-- Footer Info -->
+        <div class="footer-info">
+            Мин: $10 • Мин. вывод: $20 • Комиссия: 1%<br>
+            Поддержка: <a href="https://t.me/purple_fortune_support" style="color: #FFD700;">@purple_fortune_support</a>
+        </div>
+    </div>
+    
+    <!-- Deposit Modal -->
+    <div class="modal" id="depositModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">💎 ПОПОЛНЕНИЕ</div>
+                <button class="close-btn" onclick="closeModal('depositModal')" aria-label="Закрыть">×</button>
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">Сумка (USDT)</label>
+                <input type="number" class="amount-input" id="depositAmount" value="100" min="10" step="1" inputmode="numeric">
+            </div>
+            
+            <div class="payment-info" id="paymentInfo">
+                <div style="text-align: center; margin-bottom: 16px;">
+                    <div style="font-size: 16px; font-weight: 600; color: #FFD700; margin-bottom: 6px;">
+                        Отправьте <span id="paymentAmount">100</span> USDT
+                    </div>
+                    <div style="font-size: 12px; color: #D8BFD8;">Сеть: <span id="cryptoNetwork">TRC20</span></div>
+                </div>
+                
+                <div class="qr-container">
+                    <div class="qr-code" id="qrCode">
+                        <div style="text-align: center; padding: 8px;">
+                            <div style="font-size: 12px; margin-bottom: 4px;">QR-КОД</div>
+                            <div style="font-size: 10px; color: #666; margin: 4px 0;">Для CryptoBot</div>
+                            <div style="font-size: 8px; color: #999;" id="qrAddress"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Адрес кошелька (нажмите чтобы скопировать):</label>
+                    <div class="crypto-address" id="cryptoAddress" onclick="copyToClipboard(this.textContent)">
+                        TXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                    </div>
+                </div>
+                
+                <div class="status-display status-pending" id="paymentStatus">
+                    ⏳ Ожидание оплаты...
+                </div>
+                
+                <div class="loader" id="paymentLoader"></div>
+                
+                <div style="font-size: 11px; color: #D8BFD8; text-align: center; margin-top: 12px;">
+                    Проверка каждые 10 сек. Обычно 1-3 минуты
+                </div>
+            </div>
+            
+            <button class="spin-btn" onclick="createDeposit()" id="createDepositBtn">
+                СОЗДАТЬ ПЛАТЕЖ
+            </button>
+        </div>
+    </div>
+    
+    <!-- Withdraw Modal -->
+    <div class="modal" id="withdrawModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">💰 ВЫВОД СРЕДСТВ</div>
+                <button class="close-btn" onclick="closeModal('withdrawModal')" aria-label="Закрыть">×</button>
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">Сумма (USDT)</label>
+                <input type="number" class="amount-input" id="withdrawAmount" placeholder="Мин. 20" min="20" step="1" inputmode="numeric">
+            </div>
+            
+            <div style="margin: 16px 0; padding: 12px; background: rgba(0, 0, 0, 0.3); border-radius: 10px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="color: #D8BFD8;">Доступно:</span>
+                    <span style="color: #FFD700; font-weight: 600;">$<span id="availableBalance">1000.00</span></span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #D8BFD8;">Комиссия:</span>
+                    <span style="color: #FF4444;">$<span id="withdrawFee">1.00</span></span>
+                </div>
+            </div>
+            
+            <div class="check-display" id="checkDisplay" style="display: none;">
+                <div style="text-align: center; color: #00FF00; margin-bottom: 12px; font-weight: 600;">
+                    ✅ ЧЕК СОЗДАН!
+                </div>
+                <div class="check-code" id="checkCode" onclick="copyToClipboard(this.textContent)">CHK-XXXX-XXXX</div>
+                <div style="text-align: center; color: #FFD700; margin: 12px 0; font-weight: 600;">
+                    Сумма: $<span id="checkAmount">0</span> USDT
+                </div>
+                <div class="check-instructions">
+                    📋 <strong>Как получить:</strong><br>
+                    1. Перейдите в <a href="https://t.me/CryptoBot" target="_blank">@CryptoBot</a><br>
+                    2. Отправьте: <code>/start</code><br>
+                    3. Выберите: "Активировать чек"<br>
+                    4. Введите код чека<br>
+                    5. Получите USDT
+                </div>
+            </div>
+            
+            <button class="spin-btn" onclick="createWithdraw()" id="createWithdrawBtn">
+                СОЗДАТЬ ЧЕК
+            </button>
+            
+            <div style="font-size: 11px; color: #D8BFD8; text-align: center; margin-top: 16px;">
+                Обработка до 24 часов. Мин. сумма: $20
+            </div>
+        </div>
+    </div>
+    
+    <!-- History Modal -->
+    <div class="modal" id="historyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">📊 ИСТОРИЯ</div>
+                <button class="close-btn" onclick="closeModal('historyModal')" aria-label="Закрыть">×</button>
+            </div>
+            
+            <div style="margin-bottom: 16px; display: flex; gap: 8px;">
+                <button class="action-btn" onclick="filterHistory('all')" id="filterAll" style="flex: 1; padding: 8px; background: var(--gradient-accent); font-size: 12px;">
+                    Все
+                </button>
+                <button class="action-btn" onclick="filterHistory('deposit')" id="filterDeposit" style="flex: 1; padding: 8px; background: rgba(0,0,0,0.3); font-size: 12px;">
+                    Пополнения
+                </button>
+                <button class="action-btn" onclick="filterHistory('withdraw')" id="filterWithdraw" style="flex: 1; padding: 8px; background: rgba(0,0,0,0.3); font-size: 12px;">
+                    Выводы
+                </button>
+            </div>
+            
+            <div class="history-table" id="historyTable">
+                <div style="text-align: center; padding: 40px 20px; color: #D8BFD8;">
+                    <div class="loader"></div>
+                    <div style="margin-top: 16px; font-size: 14px;">Загрузка...</div>
+                </div>
+            </div>
+            
+            <button class="action-btn" onclick="loadMoreHistory()" id="loadMoreBtn" style="width: 100%; margin-top: 16px; display: none; padding: 12px;">
+                Загрузить еще
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // ==================== CONFIGURATION ====================
+        // Для Vercel: установите переменную окружения NEXT_PUBLIC_API_URL
+        // Или используйте автоматическое определение
+        const SERVER_URL = (() => {
+            if (process.env.NEXT_PUBLIC_API_URL) {
+                return process.env.NEXT_PUBLIC_API_URL;
+            }
+            // Для локальной разработки
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                return 'http://localhost:3000';
+            }
+            // Для продакшена на Vercel
+            return window.location.origin.replace('frontend-', 'backend-');
+        })();
+        
+        const DEBUG = window.location.hostname === 'localhost';
+        
+        // ==================== TELEGRAM WEBAPP ====================
+        let tg = window.Telegram?.WebApp || {
+            ready: () => console.log('Telegram WebApp mock ready'),
+            expand: () => console.log('Telegram WebApp mock expand'),
+            enableClosingConfirmation: () => {},
+            setHeaderColor: () => {},
+            setBackgroundColor: () => {},
+            showAlert: (message) => alert(message),
+            showPopup: (params) => confirm(params.message),
+            showNotification: (params) => showNotification(params.message, 'info'),
+            HapticFeedback: {
+                impactOccurred: () => {},
+                notificationOccurred: () => {},
+                selectionChanged: () => {}
+            },
+            initDataUnsafe: {
+                user: {
+                    id: 'demo_' + Math.floor(Math.random() * 1000000),
+                    username: 'demo_user',
+                    first_name: 'Demo',
+                    last_name: 'User'
+                }
+            }
+        };
+        
+        tg.ready();
+        tg.expand();
+        tg.enableClosingConfirmation();
+        tg.setHeaderColor('#8A2BE2');
+        tg.setBackgroundColor('#4B0082');
+        
+        const TELEGRAM_USER_ID = tg.initDataUnsafe?.user?.id || 'demo_' + Math.floor(Math.random() * 1000000);
+        const USER_HASH = typeof window.Telegram !== 'undefined' ? window.Telegram.WebApp.initData : 'demo_hash';
+        
+        // ==================== STATE MANAGEMENT ====================
+        let state = {
+            balance: 1000,
+            betAmount: 100,
+            isSpinning: false,
+            paymentCheckInterval: null,
+            currentInvoiceId: null,
+            isInitialized: false,
+            lastAction: 0
+        };
+        
+        // ==================== SYMBOLS CONFIGURATION ====================
+        const symbols = [
+            { emoji: '🍒', weight: 30, multiplier: 2 },
+            { emoji: '🍋', weight: 25, multiplier: 3 },
+            { emoji: '🍊', weight: 20, multiplier: 4 },
+            { emoji: '🍇', weight: 15, multiplier: 5 },
+            { emoji: '🔔', weight: 6, multiplier: 10 },
+            { emoji: '⭐', weight: 3, multiplier: 20 },
+            { emoji: '7️⃣', weight: 1, multiplier: 100 }
+        ];
+        
+        function getWeightedSymbol() {
+            const totalWeight = symbols.reduce((sum, s) => sum + s.weight, 0);
+            let random = Math.random() * totalWeight;
+            for (const symbol of symbols) {
+                random -= symbol.weight;
+                if (random <= 0) return symbol;
+            }
+            return symbols[0];
+        }
+        
+        // ==================== DOM ELEMENTS ====================
+        const elements = {
+            balance: document.getElementById('balance'),
+            betAmount: document.getElementById('betAmount'),
+            slots: [
+                document.getElementById('slot1'),
+                document.getElementById('slot2'),
+                document.getElementById('slot3')
+            ],
+            resultDisplay: document.getElementById('resultDisplay'),
+            spinBtn: document.getElementById('spinBtn'),
+            spinText: document.getElementById('spinText'),
+            spinLoader: document.getElementById('spinLoader'),
+            gamesToday: document.getElementById('gamesToday'),
+            todayWin: document.getElementById('todayWin'),
+            availableBalance: document.getElementById('availableBalance'),
+            withdrawFee: document.getElementById('withdrawFee'),
+            depositAmount: document.getElementById('depositAmount'),
+            withdrawAmount: document.getElementById('withdrawAmount')
+        };
+        
+        // ==================== API CLIENT ====================
+        class APIClient {
+            constructor() {
+                this.baseURL = SERVER_URL;
+                this.headers = {
+                    'Content-Type': 'application/json',
+                    'X-User-ID': TELEGRAM_USER_ID,
+                    'X-User-Hash': USER_HASH
+                };
+            }
+            
+            async request(endpoint, options = {}) {
+                const url = `${this.baseURL}${endpoint}`;
+                const config = {
+                    method: options.method || 'GET',
+                    headers: { ...this.headers, ...options.headers },
+                    signal: options.signal
+                };
+                
+                if (options.body) {
+                    config.body = JSON.stringify(options.body);
+                }
+                
+                try {
+                    const response = await fetch(url, config);
+                    
+                    if (!response.ok) {
+                        const error = await response.json().catch(() => ({}));
+                        throw new Error(error.error || `HTTP ${response.status}`);
+                    }
+                    
+                    return await response.json();
+                } catch (error) {
+                    if (error.name === 'AbortError') {
+                        throw new Error('Запрос отменен');
+                    }
+                    
+                    if (DEBUG) {
+                        console.error(`API Error [${endpoint}]:`, error);
+                    }
+                    
+                    throw error;
+                }
+            }
+            
+            async getBalance() {
+                return this.request('/api/balance');
+            }
+            
+            async spin(bet) {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+                
+                try {
+                    const result = await this.request('/api/spin', {
+                        method: 'POST',
+                        body: { bet, timestamp: Date.now() },
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeoutId);
+                    return result;
+                } catch (error) {
+                    clearTimeout(timeoutId);
+                    throw error;
+                }
+            }
+            
+            async createInvoice(amount) {
+                return this.request('/api/create-invoice', {
+                    method: 'POST',
+                    body: { amount, asset: 'USDT' }
+                });
+            }
+            
+            async checkInvoice(invoiceId) {
+                return this.request(`/api/check-invoice?invoiceId=${invoiceId}`);
+            }
+            
+            async createWithdraw(amount) {
+                return this.request('/api/create-withdraw', {
+                    method: 'POST',
+                    body: { amount, fee: Math.max(1, amount * 0.01) }
+                });
+            }
+            
+            async getHistory(filter = 'all', limit = 20, offset = 0) {
+                return this.request(`/api/history?filter=${filter}&limit=${limit}&offset=${offset}`);
+            }
+        }
+        
+        const api = new APIClient();
+        
+        // ==================== UI CONTROLLERS ====================
+        function updateBalance(newBalance) {
+            if (typeof newBalance === 'number') {
+                state.balance = newBalance;
+            }
+            elements.balance.textContent = state.balance.toFixed(2);
+            elements.availableBalance.textContent = state.balance.toFixed(2);
+            
+            // Ограничение ставки балансом
+            if (state.betAmount > state.balance) {
+                state.betAmount = state.balance;
+                elements.betAmount.textContent = state.betAmount;
+            }
+        }
+        
+        function changeBet(delta) {
+            const newBet = state.betAmount + delta;
+            if (newBet >= 10 && newBet <= 5000 && newBet <= state.balance) {
+                state.betAmount = newBet;
+                elements.betAmount.textContent = state.betAmount;
+                tg.HapticFeedback.selectionChanged();
+            }
+        }
+        
+        async function spin() {
+            // Debounce protection
+            const now = Date.now();
+            if (now - state.lastAction < 500) return;
+            state.lastAction = now;
+            
+            if (state.isSpinning || state.betAmount > state.balance) {
+                showNotification(state.betAmount > state.balance ? 'Недостаточно средств!' : 'Подождите...', 'error');
+                return;
+            }
+            
+            state.isSpinning = true;
+            elements.spinBtn.disabled = true;
+            elements.spinText.style.display = 'none';
+            elements.spinLoader.style.display = 'block';
+            elements.resultDisplay.textContent = '';
+            elements.resultDisplay.className = 'result-display';
+            
+            // Анимация вращения
+            elements.slots.forEach(slot => {
+                slot.classList.add('spinning');
+                slot.textContent = '?';
+            });
+            
+            try {
+                // API запрос с таймаутом
+                const data = await api.spin(state.betAmount);
+                
+                // Анимация остановки
+                await new Promise(resolve => setTimeout(resolve, 800));
+                
+                // Показываем результаты с задержкой
+                for (let i = 0; i < elements.slots.length; i++) {
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                    elements.slots[i].classList.remove('spinning');
+                    elements.slots[i].textContent = data.results[i];
+                }
+                
+                // Обновляем баланс и статистику
+                updateBalance(data.newBalance);
+                updateStats();
+                
+                // Показываем результат
+                if (data.win > 0) {
+                    elements.resultDisplay.textContent = `🎉 ВЫИГРЫШ $${data.win.toFixed(2)}!`;
+                    elements.resultDisplay.className = 'result-display win';
+                    tg.HapticFeedback.notificationOccurred('success');
+                    
+                    if (data.win >= state.betAmount * 10) {
+                        tg.showPopup({
+                            title: 'БОЛЬШОЙ ВЫИГРЫШ!',
+                            message: `Вы выиграли $${data.win.toFixed(2)}!`,
+                            buttons: [{ text: 'OK', type: 'default' }]
+                        });
+                    }
+                } else {
+                    elements.resultDisplay.textContent = 'Повезёт в следующий раз!';
+                    elements.resultDisplay.className = 'result-display lose';
+                    tg.HapticFeedback.notificationOccurred('warning');
+                }
+                
+            } catch (error) {
+                console.error('Spin error:', error);
+                
+                // Откат анимации при ошибке
+                elements.slots.forEach(slot => {
+                    slot.classList.remove('spinning');
+                    slot.textContent = getWeightedSymbol().emoji;
+                });
+                
+                elements.resultDisplay.textContent = 'Ошибка соединения. Попробуйте ещё раз.';
+                elements.resultDisplay.className = 'result-display lose';
+                tg.HapticFeedback.notificationOccurred('error');
+            } finally {
+                state.isSpinning = false;
+                elements.spinBtn.disabled = false;
+                elements.spinText.style.display = 'block';
+                elements.spinLoader.style.display = 'none';
+            }
+        }
+        
+        function showDepositModal() {
+            document.getElementById('depositModal').style.display = 'flex';
+            document.getElementById('paymentInfo').style.display = 'none';
+            document.getElementById('createDepositBtn').style.display = 'block';
+            
+            if (state.paymentCheckInterval) {
+                clearInterval(state.paymentCheckInterval);
+                state.paymentCheckInterval = null;
+            }
+            
+            tg.HapticFeedback.impactOccurred('light');
+        }
+        
+        async function createDeposit() {
+            const amount = parseFloat(elements.depositAmount.value);
+            if (!amount || amount < 10) {
+                showNotification('Минимум 10 USDT', 'error');
+                return;
+            }
+            
+            document.getElementById('paymentInfo').style.display = 'block';
+            document.getElementById('createDepositBtn').style.display = 'none';
+            document.getElementById('paymentAmount').textContent = amount;
+            document.getElementById('paymentStatus').className = 'status-display status-pending';
+            document.getElementById('paymentStatus').innerHTML = '⏳ Создание платежа...';
+            document.getElementById('paymentLoader').style.display = 'block';
+            
+            try {
+                const data = await api.createInvoice(amount);
+                
+                document.getElementById('cryptoAddress').textContent = data.invoice.address;
+                document.getElementById('cryptoNetwork').textContent = data.invoice.network || 'TRC20';
+                document.getElementById('paymentStatus').innerHTML = '⏳ Ожидание оплаты...';
+                
+                // Обновляем QR код
+                updateQRCode(data.invoice.address, amount);
+                
+                state.currentInvoiceId = data.invoiceId;
+                startPaymentCheck(data.invoiceId);
+                
+            } catch (error) {
+                console.error('Create deposit error:', error);
+                document.getElementById('paymentStatus').className = 'status-display status-error';
+                document.getElementById('paymentStatus').innerHTML = '❌ Ошибка создания';
+                document.getElementById('createDepositBtn').style.display = 'block';
+                document.getElementById('paymentLoader').style.display = 'none';
+                showNotification('Ошибка создания платежа', 'error');
+                tg.HapticFeedback.notificationOccurred('error');
+            }
+        }
+        
+        function updateQRCode(address, amount) {
+            const qrDiv = document.getElementById('qrCode');
+            const shortAddress = `${address.substring(0, 8)}...${address.substring(address.length - 8)}`;
+            document.getElementById('qrAddress').textContent = shortAddress;
+            
+            // В продакшене используйте реальную библиотеку QR кодов
+            // qrDiv.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(address)}&color=8A2BE2" alt="QR Code">`;
+        }
+        
+        function startPaymentCheck(invoiceId) {
+            if (state.paymentCheckInterval) {
+                clearInterval(state.paymentCheckInterval);
+            }
+            
+            let checkCount = 0;
+            const maxChecks = 180; // 30 минут
+            
+            state.paymentCheckInterval = setInterval(async () => {
+                try {
+                    checkCount++;
+                    const data = await api.checkInvoice(invoiceId);
+                    
+                    if (data.status === 'paid') {
+                        clearInterval(state.paymentCheckInterval);
+                        state.paymentCheckInterval = null;
+                        
+                        document.getElementById('paymentStatus').className = 'status-display status-success';
+                        document.getElementById('paymentStatus').innerHTML = '✅ Оплата получена!';
+                        document.getElementById('paymentLoader').style.display = 'none';
+                        
+                        updateBalance(data.newBalance || (state.balance + data.amount));
+                        updateStats();
+                        
+                        showNotification(`Баланс пополнен на $${data.amount.toFixed(2)}!`, 'success');
+                        tg.HapticFeedback.notificationOccurred('success');
+                        
+                        setTimeout(() => {
+                            closeModal('depositModal');
+                        }, 2500);
+                    } else if (data.status === 'expired') {
+                        clearInterval(state.paymentCheckInterval);
+                        state.paymentCheckInterval = null;
+                        document.getElementById('paymentStatus').className = 'status-display status-error';
+                        document.getElementById('paymentStatus').innerHTML = '❌ Время истекло';
+                        document.getElementById('createDepositBtn').style.display = 'block';
+                        document.getElementById('paymentLoader').style.display = 'none';
+                    } else if (checkCount >= maxChecks) {
+                        clearInterval(state.paymentCheckInterval);
+                        state.paymentCheckInterval = null;
+                        document.getElementById('paymentStatus').innerHTML = '⌛ Время проверки истекло';
+                        document.getElementById('paymentLoader').style.display = 'none';
+                    }
+                } catch (error) {
+                    console.error('Payment check error:', error);
+                }
+            }, 10000);
+        }
+        
+        function showWithdrawModal() {
+            document.getElementById('withdrawModal').style.display = 'flex';
+            document.getElementById('checkDisplay').style.display = 'none';
+            document.getElementById('createWithdrawBtn').style.display = 'block';
+            
+            // Расчет комиссии
+            const amount = parseFloat(elements.withdrawAmount.value) || 0;
+            const fee = Math.max(1, amount * 0.01);
+            document.getElementById('withdrawFee').textContent = fee.toFixed(2);
+            
+            tg.HapticFeedback.impactOccurred('light');
+        }
+        
+        async function createWithdraw() {
+            const amount = parseFloat(elements.withdrawAmount.value);
+            const fee = parseFloat(document.getElementById('withdrawFee').textContent);
+            const total = amount + fee;
+            
+            if (!amount || amount < 20) {
+                showNotification('Минимум 20 USDT', 'error');
+                return;
+            }
+            
+            if (total > state.balance) {
+                showNotification('Недостаточно средств', 'error');
+                tg.HapticFeedback.notificationOccurred('error');
+                return;
+            }
+            
+            try {
+                const data = await api.createWithdraw(amount);
+                
+                document.getElementById('checkDisplay').style.display = 'block';
+                document.getElementById('createWithdrawBtn').style.display = 'none';
+                document.getElementById('checkCode').textContent = data.checkCode;
+                document.getElementById('checkAmount').textContent = amount.toFixed(2);
+                
+                updateBalance(state.balance - total);
+                updateStats();
+                
+                copyToClipboard(data.checkCode);
+                showNotification('Чек скопирован!', 'success');
+                tg.HapticFeedback.notificationOccurred('success');
+                
+            } catch (error) {
+                console.error('Withdraw error:', error);
+                showNotification('Ошибка создания чека', 'error');
+                tg.HapticFeedback.notificationOccurred('error');
+            }
+        }
+        
+        function showHistoryModal() {
+            document.getElementById('historyModal').style.display = 'flex';
+            loadHistory();
+            tg.HapticFeedback.impactOccurred('light');
+        }
+        
+        async function loadHistory(filter = 'all') {
+            const historyTable = document.getElementById('historyTable');
+            historyTable.innerHTML = '<div style="text-align: center; padding: 40px 20px;"><div class="loader"></div><div style="margin-top: 16px; font-size: 14px;">Загрузка...</div></div>';
+            
+            try {
+                const data = await api.getHistory(filter, 20, 0);
+                
+                if (data.history && data.history.length > 0) {
+                    displayHistory(data.history);
+                    
+                    if (data.total > 20) {
+                        document.getElementById('loadMoreBtn').style.display = 'block';
+                    } else {
+                        document.getElementById('loadMoreBtn').style.display = 'none';
+                    }
+                } else {
+                    historyTable.innerHTML = '<div style="text-align: center; padding: 40px; color: #D8BFD8;">Нет операций</div>';
+                    document.getElementById('loadMoreBtn').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Load history error:', error);
+                historyTable.innerHTML = '<div style="text-align: center; padding: 40px; color: #FF4444;">Ошибка загрузки</div>';
+            }
+        }
+        
+        function displayHistory(history) {
+            const historyTable = document.getElementById('historyTable');
+            const iconMap = {
+                'deposit': '💎',
+                'withdraw': '💰',
+                'win': '🎉',
+                'bet': '🎰'
+            };
+            
+            const colorMap = {
+                'deposit': '#00FF00',
+                'withdraw': '#FF4444',
+                'win': '#00FF00',
+                'bet': '#FF4444'
+            };
+            
+            const nameMap = {
+                'deposit': 'Пополнение',
+                'withdraw': 'Вывод',
+                'win': 'Выигрыш',
+                'bet': 'Ставка'
+            };
+            
+            historyTable.innerHTML = history.map(item => {
+                const date = new Date(item.timestamp || item.date).toLocaleString('ru-RU', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                const sign = item.type === 'deposit' || item.type === 'win' ? '+' : '-';
+                const color = colorMap[item.type];
+                const icon = iconMap[item.type];
+                const name = nameMap[item.type];
+                
+                return `
+                    <div class="history-item history-type ${item.type}">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="font-size: 18px;">${icon}</div>
+                            <div>
+                                <div style="font-weight: 600; font-size: 14px;">${name}</div>
+                                <div style="font-size: 11px; color: #D8BFD8;">${date}</div>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 800; color: ${color}; font-size: 14px;">
+                                ${sign}$${item.amount.toFixed(2)}
+                            </div>
+                            ${item.status ? `<div style="font-size: 10px; color: #D8BFD8;">${item.status}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function filterHistory(filter) {
+            // Обновляем активную кнопку
+            ['all', 'deposit', 'withdraw'].forEach(f => {
+                const btn = document.getElementById(`filter${f.charAt(0).toUpperCase() + f.slice(1)}`);
+                btn.style.background = f === filter ? 'var(--gradient-accent)' : 'rgba(0,0,0,0.3)';
+            });
+            
+            loadHistory(filter);
+            tg.HapticFeedback.selectionChanged();
+        }
+        
+        async function loadMoreHistory() {
+            // Реализация пагинации
+            showNotification('Функция скоро будет доступна', 'info');
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            
+            if (state.paymentCheckInterval) {
+                clearInterval(state.paymentCheckInterval);
+                state.paymentCheckInterval = null;
+            }
+            
+            tg.HapticFeedback.impactOccurred('light');
+        }
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification('Скопировано!', 'success');
+                tg.HapticFeedback.notificationOccurred('success');
+            }).catch(err => {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('Скопировано!', 'success');
+            });
+        }
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 12px 16px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 10000;
+                animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                max-width: 280px;
+                font-size: 14px;
+            `;
+            
+            if (type === 'success') {
+                notification.style.background = 'linear-gradient(135deg, #00b09b, #96c93d)';
+            } else if (type === 'error') {
+                notification.style.background = 'linear-gradient(135deg, #ff416c, #ff4b2b)';
+            } else {
+                notification.style.background = 'linear-gradient(135deg, #8A2BE2, #4B0082)';
+            }
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+        
+        function updateStats() {
+            // Для демо - генерируем случайные значения
+            // В реальном приложении загружайте с сервера
+            const games = parseInt(elements.gamesToday.textContent);
+            elements.gamesToday.textContent = games + 1;
+            
+            const currentWin = parseFloat(elements.todayWin.textContent.replace('$', ''));
+            elements.todayWin.textContent = `$${(currentWin + Math.random() * 50).toFixed(2)}`;
+        }
+        
+        // ==================== INITIALIZATION ====================
+        async function initializeApp() {
+            if (state.isInitialized) return;
+            
+            try {
+                // Загружаем баланс
+                const data = await api.getBalance();
+                updateBalance(data.balance || 1000);
+                
+                // Обновляем статистику
+                if (data.gamesPlayed !== undefined) {
+                    elements.gamesToday.textContent = data.gamesPlayed;
+                }
+                if (data.totalWins !== undefined) {
+                    elements.todayWin.textContent = `$${(data.totalWins || 0).toFixed(2)}`;
+                }
+                
+                state.isInitialized = true;
+                
+                if (DEBUG) {
+                    console.log('App initialized:', {
+                        userId: TELEGRAM_USER_ID,
+                        balance: state.balance
+                    });
+                }
+                
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showNotification('Ошибка загрузки данных', 'error');
+            }
+        }
+        
+        // ==================== EVENT LISTENERS ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeApp();
+            
+            // Обработчики для инпутов
+            elements.withdrawAmount.addEventListener('input', function() {
+                const amount = parseFloat(this.value) || 0;
+                const fee = Math.max(1, amount * 0.01);
+                document.getElementById('withdrawFee').textContent = fee.toFixed(2);
+                tg.HapticFeedback.selectionChanged();
+            });
+            
+            // Закрытие модалок по клику вне контента
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeModal(modal.id);
+                    }
+                });
+            });
+            
+            // Блокирование масштабирования на iOS
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function (event) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+        });
+        
+        // ==================== GLOBAL ERROR HANDLING ====================
+        window.addEventListener('error', function(event) {
+            console.error('Global error:', event.error);
+            if (DEBUG) {
+                showNotification(`Ошибка: ${event.error.message}`, 'error');
+            } else {
+                showNotification('Произошла ошибка. Попробуйте обновить.', 'error');
+            }
+        });
+        
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('Unhandled promise rejection:', event.reason);
+            if (DEBUG) {
+                showNotification(`Ошибка: ${event.reason?.message || 'Unknown'}`, 'error');
+            }
+        });
+        
+        // ==================== DEBUG MODE ====================
+        if (DEBUG) {
+            console.log('🔧 DEBUG MODE ENABLED');
+            console.log('Server URL:', SERVER_URL);
+            console.log('User ID:', TELEGRAM_USER_ID);
+            window.state = state;
+            window.api = api;
+        }
+    </script>
+</body>
+</html>
